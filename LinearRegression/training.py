@@ -1,10 +1,11 @@
 import numpy as np
 from sklearn.linear_model import SGDRegressor
+from sklearn.metrics import mean_squared_error
 import Model
 from utils import splitter
 
 
-def linearRegressor_from_sklearn(data, label, lr, epoch, splitPercent):
+def linearRegressor_from_sklearn(data, label, lr, epochs, splitPercent):
 
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercent
@@ -14,16 +15,18 @@ def linearRegressor_from_sklearn(data, label, lr, epoch, splitPercent):
         loss="squared_error",
         learning_rate="constant",
         eta0=lr,
-        max_iter=epoch,
+        max_iter=epochs,
         random_state=42,
     )
     regressor.fit(X_train, Y_train)
     y_test_pred = regressor.predict(X_test)
     test_loss = np.mean((Y_test - y_test_pred) ** 2)
+    # test_loss = mean_squared_error(Y_test, y_test_pred)
 
     y_train_pred = regressor.predict(X_train)
     train_loss = np.mean((Y_train - y_train_pred) ** 2)
-    return (train_loss, test_loss)
+    # train_loss = mean_squared_error(Y_train, y_train_pred)
+    return (train_loss, test_loss, y_test_pred, Y_test)
 
 
 def linearRegressor_my_model(data, label, lr, epochs, splitPercent):
@@ -42,10 +45,10 @@ def linearRegressor_my_model(data, label, lr, epochs, splitPercent):
         epochs=epochs,
     )
     y_predict = model.predict(X_train)
-    train_loss = model.SSE(y_predict, Y_train)
+    train_loss = model.MSE(Y_train, y_predict)
     y_test_predict = model.predict(X_test)
-    test_loss = model.SSE(y_test_predict, Y_test)
-    return (train_loss, test_loss)
+    test_loss = model.MSE(Y_test, y_test_predict)
+    return (train_loss, test_loss, y_test_predict, Y_test)
 
 
 def model_runner_for_each_data_percentage(data, label, lr, epoch, model_function):
@@ -53,7 +56,7 @@ def model_runner_for_each_data_percentage(data, label, lr, epoch, model_function
     model_train_losses = []
     model_test_losses = []
     for i in splits:
-        (train_loss, test_loss) = model_function(data, label, lr, epoch, i)
+        (train_loss, test_loss, _, _) = model_function(data, label, lr, epoch, i)
         model_train_losses.append(train_loss)
         model_test_losses.append(test_loss)
 
@@ -78,7 +81,7 @@ def model_runner_for_each_learning_rate(data, label, lr, epoch, model_function):
     model_train_losses = []
     model_test_losses = []
     for i in lr:
-        (train_loss, test_loss) = model_function(data, label, i, epoch, 1.0)
+        (train_loss, test_loss, _, _) = model_function(data, label, i, epoch, 1.0)
         model_train_losses.append(train_loss)
         model_test_losses.append(test_loss)
 

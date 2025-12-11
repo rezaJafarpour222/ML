@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib
 
-matplotlib.use("GTK3Agg")
+matplotlib.use("GTK3Agg")  # this line is for linux comment it for windows
 
 import matplotlib.pyplot as plt
 
@@ -47,7 +47,7 @@ def plotter(
     show_percentage_for_x=False,
     show_values_for_each=False,
 ):
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(16, 9), dpi=500)
 
     (line1,) = plt.plot(
         x_values, first, label=first_line_title, marker="o", color="red"
@@ -94,5 +94,5 @@ def plotter(
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.legend(handles=[line1, line2], loc="best")
     plt.tight_layout()
-    plt.savefig(f"plots/{file_name}")
+    plt.savefig(f"LinearRegression/plots/{file_name}", dpi=500)
     plt.close()
