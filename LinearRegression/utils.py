@@ -61,11 +61,9 @@ def plotter(
     plt.xlabel(x_label)
     plt.ylabel(y_label)
 
-    # Format x-axis as percentages
     if show_percentage_for_x:
         plt.xticks(x_values, [f"{int(x*100)}%" for x in x_values])
 
-    # Add text labels on the dots
     if show_values_for_each:
         for x, y in zip(x_values, first):
             plt.text(
@@ -90,7 +88,6 @@ def plotter(
                 alpha=0.7,
             )
 
-    # Grid + legend
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.legend(handles=[line1, line2], loc="best")
     plt.tight_layout()

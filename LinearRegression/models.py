@@ -21,11 +21,9 @@ def linearRegressor_from_sklearn(data, label, lr, epochs, splitPercent):
     regressor.fit(X_train, Y_train)
     y_test_pred = regressor.predict(X_test)
     test_loss = np.mean((Y_test - y_test_pred) ** 2)
-    # test_loss = mean_squared_error(Y_test, y_test_pred)
 
     y_train_pred = regressor.predict(X_train)
     train_loss = np.mean((Y_train - y_train_pred) ** 2)
-    # train_loss = mean_squared_error(Y_train, y_train_pred)
     return (train_loss, test_loss, y_test_pred, Y_test)
 
 

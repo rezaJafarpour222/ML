@@ -1,4 +1,4 @@
-from solutions import (
+from solution import (
     effect_of_learning_rate_scenario,
     effect_of_sample_size_scenario,
     model_comparison_prediction_scenario,
@@ -17,16 +17,12 @@ T = raw_data["medv"].values
 X = raw_data.drop(columns=["medv"]).values
 
 X_Scaled = z_score_scaler(X)
-data_with_bias = np.hstack([np.ones((X.shape[0], 1)), X_Scaled])
+weighted_input = np.hstack([np.ones((X.shape[0], 1)), X_Scaled])
 
-effect_of_sample_size_scenario(data_with_bias=data_with_bias, label=T)
-
-effect_of_learning_rate_scenario(data_with_bias=data_with_bias, label=T)
-
-train_loss_curve_AND_test_loss_curve_scenario(data_with_bias=data_with_bias, label=T)
-
-models_comparison_learning_rate_scenario(data_with_bias=data_with_bias, label=T)
-
-models_comparison_data_percentage_scenario(data_with_bias=data_with_bias, label=T)
-model_comparison_prediction_scenario(data_with_bias=data_with_bias, label=T)
-models_comparison_prediction_error_scenario(data_with_bias=data_with_bias, label=T)
+effect_of_sample_size_scenario(weightedInput=weighted_input, label=T)
+effect_of_learning_rate_scenario(weightedInput=weighted_input, label=T)
+train_loss_curve_AND_test_loss_curve_scenario(weightedInput=weighted_input, label=T)
+models_comparison_learning_rate_scenario(weightedInput=weighted_input, label=T)
+models_comparison_data_percentage_scenario(weightedInput=weighted_input, label=T)
+model_comparison_prediction_scenario(weightedInput=weighted_input, label=T)
+models_comparison_prediction_error_scenario(weightedInput=weighted_input, label=T)
