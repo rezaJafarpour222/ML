@@ -1,12 +1,12 @@
 from matplotlib import pyplot as plt
 import numpy as np
-import Model
-from training import (
-    linearRegressor_from_sklearn,
-    linearRegressor_my_model,
+
+from modelRunners import (
     model_runner_for_each_data_percentage,
     model_runner_for_each_learning_rate,
 )
+from models import linearRegressor_from_sklearn, linearRegressor_my_model
+import myRegressor
 from utils import plotter, splitter
 
 EPOCHS = 20
@@ -18,7 +18,7 @@ def train_loss_curve_AND_test_loss_curve_scenario(data_with_bias, label):
         data=data_with_bias, label=label, splitPrecent=1.0
     )
 
-    model = Model.LinearRegressor(data_with_bias.shape[1])
+    model = myRegressor.LinearRegressor(data_with_bias.shape[1])
     (_, _) = model.SGD(
         X_train_shuffled=X_train,
         Y_train_shuffled=Y_train,
@@ -49,7 +49,7 @@ def train_loss_curve_AND_test_loss_curve_scenario(data_with_bias, label):
     )
 
 
-def sample_size_effect_scenario(data_with_bias, label):
+def effect_of_sample_size_scenario(data_with_bias, label):
     (train_loss, test_loss, x_values) = model_runner_for_each_data_percentage(
         data=data_with_bias,
         label=label,
@@ -72,7 +72,7 @@ def sample_size_effect_scenario(data_with_bias, label):
     )
 
 
-def learning_rate_effect_scenario(data_with_bias, label):
+def effect_of_learning_rate_scenario(data_with_bias, label):
     (train_loss, test_loss, x_values) = model_runner_for_each_learning_rate(
         data=data_with_bias,
         label=label,
@@ -87,7 +87,7 @@ def learning_rate_effect_scenario(data_with_bias, label):
         first_line_title="Train Loss",
         second_line_title="Test Loss",
         x_label="Learning Rate",
-        y_label="train Loss",
+        y_label="Train Loss",
         title="Learning Rate Effect On Losses (My Regressor)",
         show_percentage_for_x=False,
         show_values_for_each=True,
@@ -95,7 +95,7 @@ def learning_rate_effect_scenario(data_with_bias, label):
     )
 
 
-def comparison_learning_rate_scenario(data_with_bias, label):
+def models_comparison_learning_rate_scenario(data_with_bias, label):
     (my_train_loss, my_test_loss, x_values) = model_runner_for_each_learning_rate(
         data=data_with_bias,
         label=label,
@@ -139,7 +139,7 @@ def comparison_learning_rate_scenario(data_with_bias, label):
     )
 
 
-def comparison_data_percentage_scenario(data_with_bias, label):
+def models_comparison_data_percentage_scenario(data_with_bias, label):
     (my_train_loss, my_test_loss, x_values) = model_runner_for_each_data_percentage(
         data=data_with_bias,
         label=label,
@@ -183,7 +183,7 @@ def comparison_data_percentage_scenario(data_with_bias, label):
     )
 
 
-def prediction_scenario(data_with_bias, label):
+def model_comparison_prediction_scenario(data_with_bias, label):
     (_, _, sk_pred, _) = linearRegressor_from_sklearn(
         data=data_with_bias, label=label, lr=LR, epochs=EPOCHS, splitPercent=1.0
     )
@@ -219,7 +219,7 @@ def prediction_scenario(data_with_bias, label):
     plt.close()
 
 
-def prediction_error_scenario(data_with_bias, label):
+def models_comparison_prediction_error_scenario(data_with_bias, label):
     (_, _, sk_pred, _) = linearRegressor_from_sklearn(
         data=data_with_bias, label=label, lr=LR, epochs=EPOCHS, splitPercent=1.0
     )
@@ -250,8 +250,6 @@ def prediction_error_scenario(data_with_bias, label):
     plt.ylabel("Error (True - Prediction)")
     plt.legend()
     plt.title("True values vs predicted values")
-    plt.xlabel("X-axis")
-    plt.ylabel("Y-axis")
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(f"LinearRegression/plots/Prediction Error", dpi=500)
