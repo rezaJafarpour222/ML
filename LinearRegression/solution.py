@@ -9,7 +9,7 @@ from models import linearRegressor_from_sklearn, linearRegressor_my_model
 from myRegressor import LinearRegressor
 from utils import plotter, splitter
 
-EPOCHS = 20
+EPOCHS = 200
 LR = 0.001
 
 
@@ -227,8 +227,8 @@ def train_loss_curve_AND_test_loss_curve_scenario(weightedInput, label):
 
     model = LinearRegressor(weightedInput.shape[1])
     (_, _) = model.SGD(
-        X_train_shuffled=X_train,
-        Y_train_shuffled=Y_train,
+        X_train=X_train,
+        Y_train=Y_train,
         X_test=X_test,
         Y_test=Y_test,
         lr=LR,
