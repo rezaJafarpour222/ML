@@ -1,4 +1,4 @@
-from solution import (
+from solutions import (
     effect_of_learning_rate_scenario,
     effect_of_sample_size_scenario,
     model_comparison_prediction_scenario,

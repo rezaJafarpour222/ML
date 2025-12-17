@@ -1,51 +1,21 @@
-# Seed for reproducibility
 from matplotlib import pyplot as plt
 import numpy as np
-from pandas import set_option
+import pandas as pd
 
 from myPerceptron import Perceptron
-from utils import plotter
+from utils import plotter, splitter, z_score_scaler
 
 
-np.random.seed(42)
-
-# Number of samples per class
-n_samples = 50
-
-# Class +1 centered at (2, 2)
-X_pos = np.random.randn(n_samples, 2) + 2
-Y_pos = np.ones(n_samples)
-
-# Class -1 centered at (-2, -2)
-X_neg = np.random.randn(n_samples, 2) - 2
-Y_neg = -np.ones(n_samples)
-
-# Combine the data
-X = np.vstack((X_pos, X_neg))
-Y = np.concatenate((Y_pos, Y_neg))
-
-# Shuffle the dataset
-indices = np.random.permutation(len(Y))
-X = X[indices]
-Y = Y[indices]
-
-# Split into train/test
-split = int(0.8 * len(Y))
-X_train, X_test = X[:split], X[split:]
-Y_train, Y_test = Y[:split], Y[split:]
-model = Perceptron(X.shape[1])
-model.SGD(
-    X_train=X_train, Y_train=Y_train, X_test=X_test, Y_test=Y_test, lr=0.001, epochs=1
+raw_data = pd.read_csv("Perceptron/DataSets/pima-indians-diabetes.csv", header=None)
+raw_data.iloc[:, 8] = raw_data.iloc[:, 8].replace(0, -1)
+raw_label = raw_data.iloc[:, 8].values
+raw_data = raw_data.iloc[:, 0:7].values
+X_Scaled = z_score_scaler(raw_data)
+weighted_input = np.hstack([np.ones((raw_data.shape[0], 1)), X_Scaled])
+(X_train, Y_train, X_test, Y_test) = splitter(
+    data=weighted_input, label=raw_label, splitPrecent=1.0
 )
-plt.scatter(X_pos[:, 0], X_pos[:, 1], marker="o", label="Class +1")
-plt.scatter(X_neg[:, 0], X_neg[:, 1], marker="x", label="Class -1")
-w1, w2 = model.W
-x_vals = np.array([X_train[:, 0].min() - 1, X_train[:, 0].max() + 1])
-y_vals = -(w1 / w2) * x_vals
-plt.plot(x_vals, y_vals, label="Decision Boundary")
-
-plt.xlabel("x1")
-plt.ylabel("x2")
-plt.legend()
-plt.title("Perceptron Decision Boundary")
-plt.show()
+model = Perceptron(weighted_input.shape[1])
+model.SGD(
+    X_train=X_train, Y_train=Y_train, X_test=X_test, Y_test=Y_test, lr=0.001, epochs=20
+)

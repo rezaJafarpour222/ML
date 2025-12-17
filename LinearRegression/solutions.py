@@ -9,7 +9,7 @@ from models import linearRegressor_from_sklearn, linearRegressor_my_model
 from myRegressor import LinearRegressor
 from utils import plotter, splitter
 
-EPOCHS = 200
+EPOCHS = 25
 LR = 0.001
 
 
@@ -23,12 +23,10 @@ def effect_of_sample_size_scenario(weightedInput, label):
     )
     plotter(
         x_values=x_values,
-        first=train_loss,
-        second=test_loss,
-        first_line_title="Train Loss",
-        second_line_title="Test Loss",
+        values_arr=[train_loss, test_loss],
+        line_label_arr=["Regressor Train Loss", "Regressor Test Loss"],
         x_label="Data%",
-        y_label="Train Loss",
+        y_label="Loss value",
         title="Sample Size Effect (My Regressor)",
         show_percentage_for_x=True,
         show_values_for_each=True,
@@ -46,10 +44,8 @@ def effect_of_learning_rate_scenario(weightedInput, label):
     )
     plotter(
         x_values=x_values,
-        first=train_loss,
-        second=test_loss,
-        first_line_title="Train Loss",
-        second_line_title="Test Loss",
+        values_arr=[train_loss, test_loss],
+        line_label_arr=["Train Loss", "Test Loss"],
         x_label="Learning Rate",
         y_label="Train Loss",
         title="Learning Rate Effect On Losses (My Regressor)",
@@ -77,29 +73,19 @@ def models_comparison_learning_rate_scenario(weightedInput, label):
     )
     plotter(
         x_values=x_values,
-        first=my_train_loss,
-        second=sk_train_loss,
-        first_line_title="My Regressor Train Loss",
-        second_line_title="Sk Regressor Train Loss",
+        values_arr=[my_train_loss, my_test_loss, sk_train_loss, sk_test_loss],
+        line_label_arr=[
+            "My Regressor Train Loss",
+            "My Regressor Test Loss",
+            "Sk Regressor Train Loss",
+            "Sk Regressor Test Loss",
+        ],
         x_label="Learning Rate",
-        y_label="Train Loss",
-        title="Learning Rate Effect On Losses Comparison (Train Loss)",
-        show_percentage_for_x=False,
+        y_label="Loss",
         show_values_for_each=True,
-        file_name="Learning Rate Model Comparison (Train Loss)",
-    )
-    plotter(
-        x_values=x_values,
-        first=my_test_loss,
-        second=sk_test_loss,
-        first_line_title="My Regressor Test Loss",
-        second_line_title="Sk Regressor Test Loss",
-        x_label="Learning Rate",
-        y_label="Test Loss",
-        title="Learning Rate Effect On Losses Comparison (Test Loss)",
+        title="Learning Rate Model Comparison",
         show_percentage_for_x=False,
-        show_values_for_each=True,
-        file_name="Learning Rate Model Comparison (Test Loss)",
+        file_name="Learning Rate Model Comparison",
     )
 
 
@@ -121,29 +107,19 @@ def models_comparison_data_percentage_scenario(weightedInput, label):
     )
     plotter(
         x_values=x_values,
-        first=my_train_loss,
-        second=sk_train_loss,
-        first_line_title="My Regressor Train Loss",
-        second_line_title="Sk Regressor Train Loss",
+        values_arr=[my_train_loss, my_test_loss, sk_train_loss, sk_test_loss],
+        line_label_arr=[
+            "My Regressor Train Loss",
+            "My Regressor Test Loss",
+            "Sk Regressor Train Loss",
+            "Sk Regressor Test Loss",
+        ],
         x_label="Data Percentage",
-        y_label="Train Loss",
-        title="Data Percentage Effect On Losses Comparison (Train Loss)",
-        show_percentage_for_x=True,
+        y_label="Loss",
         show_values_for_each=True,
-        file_name="Data Percentage Model Comparison Train Loss",
-    )
-    plotter(
-        x_values=x_values,
-        first=my_test_loss,
-        second=sk_test_loss,
-        first_line_title="My Regressor Test Loss",
-        second_line_title="Sk Regressor Test Loss",
-        x_label="Data percentage",
-        y_label="Test Loss",
-        title="Data Percentage Effect On Losses Comparison (Test Loss)",
         show_percentage_for_x=True,
-        show_values_for_each=True,
-        file_name="Data Percentage Model Comparison Test Loss",
+        title="Data Percentage Model Comparison",
+        file_name="Data Percentage Model Comparison",
     )
 
 
@@ -243,10 +219,8 @@ def train_loss_curve_AND_test_loss_curve_scenario(weightedInput, label):
     step = int(EPOCHS / 10)
     plotter(
         x_values=np.arange(0, EPOCHS, step),
-        first=model.total_train_lost[::step],
-        second=model.total_test_lost[::step],
-        first_line_title="Train Loss",
-        second_line_title="Test Loss",
+        values_arr=[model.total_train_lost[::step], model.total_test_lost[::step]],
+        line_label_arr=["Train Loss", "Test Loss"],
         x_label="Epochs",
         y_label="Loss",
         title="Train and Test Loss Curve (My Regressor)",

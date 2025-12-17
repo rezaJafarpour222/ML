@@ -36,60 +36,50 @@ def splitter(splitPrecent, data, label):
 
 def plotter(
     x_values,
-    first,
-    x_label,
-    second,
-    y_label,
+    values_arr,
+    line_label_arr,
     file_name,
+    x_label,
+    y_label,
     title="default",
-    first_line_title="first",
-    second_line_title="second",
     show_percentage_for_x=False,
     show_values_for_each=False,
 ):
-    plt.figure(figsize=(16, 9), dpi=500)
+    plt.figure(figsize=(16, 9), dpi=50)
+    line_List = []
+    color_list = ["red", "blue", "green", "orange", "purple"]
+    markers = ["o", "*", "x", "D", "v", "s", "^", "+", "p", "h"]
 
-    (line1,) = plt.plot(
-        x_values, first, label=first_line_title, marker="o", color="red"
-    )
-    (line2,) = plt.plot(
-        x_values, second, label=second_line_title, marker="o", color="blue"
-    )
-
-    # Title + labels
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
+    for i in range(len(values_arr)):
+        (line,) = plt.plot(
+            x_values,
+            values_arr[i],
+            label=line_label_arr[i],
+            marker=markers[i],
+            color=color_list[i],
+        )
+        line_List.append(line)
+        if show_values_for_each:
+            for x, y in zip(x_values, values_arr[i]):
+                plt.text(
+                    x,
+                    y,
+                    f"{y:.2f}",
+                    fontsize=9,
+                    ha="center",
+                    va="bottom",
+                    color=color_list[i],
+                    alpha=0.7,
+                )
 
     if show_percentage_for_x:
         plt.xticks(x_values, [f"{int(x*100)}%" for x in x_values])
 
-    if show_values_for_each:
-        for x, y in zip(x_values, first):
-            plt.text(
-                x,
-                y,
-                f"{y:.4f}",
-                fontsize=9,
-                ha="center",
-                va="bottom",
-                color="red",
-                alpha=0.7,
-            )
-        for x, y in zip(x_values, second):
-            plt.text(
-                x,
-                y,
-                f"{y:.4f}",
-                fontsize=9,
-                ha="center",
-                va="bottom",
-                color="blue",
-                alpha=0.7,
-            )
-
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend(handles=[line1, line2], loc="best")
+    plt.legend(handles=line_List, loc="best")
     plt.tight_layout()
     plt.savefig(f"LinearRegression/plots/{file_name}", dpi=500)
     plt.close()
