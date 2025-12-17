@@ -9,9 +9,7 @@ def perceptron_from_sklearn(data, label, lr, epochs, splitPercent):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercent
     )
-    model = skPerceptron(
-        max_iter=epochs, eta0=lr, learning_rate="constant", warm_start=True
-    )
+    model = skPerceptron(max_iter=1, eta0=lr, learning_rate="constant", warm_start=True)
     train_TPs, train_TNs, train_FPs, train_FNs = []
     test_TPs, test_TNs, test_FPs, test_FNs = []
     for _ in range(epochs):
