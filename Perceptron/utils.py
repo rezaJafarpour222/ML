@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib
-from pyparsing import line
 
 matplotlib.use("GTK3Agg")  # this line is for linux comment it for windows
 
@@ -46,7 +45,7 @@ def plotter(
     show_percentage_for_x=False,
     show_values_for_each=False,
 ):
-    plt.figure(figsize=(16, 9), dpi=50)
+    plt.figure(figsize=(16, 9), dpi=100)
     line_List = []
     colors = [
         "red",
@@ -95,3 +94,4 @@ def plotter(
     plt.tight_layout()
     plt.savefig(f"Perceptron/plots/{file_name}", dpi=500)
     plt.close()
+    # plt.show()

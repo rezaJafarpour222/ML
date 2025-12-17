@@ -1,9 +1,14 @@
-from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 
-from myPerceptron import Perceptron
-from utils import plotter, splitter, z_score_scaler
+from modelRunners import model_runner_for_each_data_percentage
+from solutions import (
+    effect_of_learning_rate_scenario,
+    effect_of_sample_size_scenario,
+    models_comparison_data_percentage_scenario,
+    models_comparison_learning_rate_scenario,
+)
+from utils import splitter, z_score_scaler
 
 
 raw_data = pd.read_csv("Perceptron/DataSets/pima-indians-diabetes.csv", header=None)
@@ -15,7 +20,9 @@ weighted_input = np.hstack([np.ones((raw_data.shape[0], 1)), X_Scaled])
 (X_train, Y_train, X_test, Y_test) = splitter(
     data=weighted_input, label=raw_label, splitPrecent=1.0
 )
-model = Perceptron(weighted_input.shape[1])
-model.SGD(
-    X_train=X_train, Y_train=Y_train, X_test=X_test, Y_test=Y_test, lr=0.001, epochs=20
+effect_of_sample_size_scenario(weightedInput=weighted_input, label=raw_label)
+effect_of_learning_rate_scenario(weightedInput=weighted_input, label=raw_label)
+models_comparison_data_percentage_scenario(
+    weightedInput=weighted_input, label=raw_label
 )
+models_comparison_learning_rate_scenario(weightedInput=weighted_input, label=raw_label)

@@ -10,21 +10,31 @@ def loss_calculator(prediction, label):
 
 
 def accuracy(TP, TN, FP, FN):
-    trues = TP + TN
-    all = TP + TN + FP + FN
-    return trues / all
+    numerator = TP + TN
+    denominator = TP + TN + FP + FN
+    if denominator != 0:
+        return numerator / denominator
+    return 0
 
 
 def recall(TP, FN):
-    return TP / (TP + FN)
+    denominator = TP + FN
+    if denominator != 0:
+        return TP / (TP + FN)
+    return 0
 
 
-def precision(TP, TF):
-    TP / (TF + TP)
+def precision(TP, FP):
+    denominator = FP + TP
+    if denominator != 0:
+        return TP / (FP + TP)
+    return 0
 
 
 def f1_measure(precision, recall):
     beta = 1
     numerator = ((beta**2) + 1) * precision * recall
-    denomerator = ((beta**2) * precision) + recall
-    return numerator / denomerator
+    denominator = ((beta**2) * precision) + recall
+    if denominator != 0:
+        return numerator / denominator
+    return 0
