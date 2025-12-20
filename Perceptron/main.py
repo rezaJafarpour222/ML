@@ -1,14 +1,17 @@
+from turtle import color
+from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 
-from modelRunners import model_runner_for_each_data_percentage
+
+from solutions import precision_accuracy_curves_scenario
 from solutions import (
     effect_of_learning_rate_scenario,
     effect_of_sample_size_scenario,
     models_comparison_data_percentage_scenario,
     models_comparison_learning_rate_scenario,
 )
-from utils import splitter, z_score_scaler
+from utils import plotter, splitter, z_score_scaler
 
 
 raw_data = pd.read_csv("Perceptron/DataSets/pima-indians-diabetes.csv", header=None)
@@ -20,9 +23,11 @@ weighted_input = np.hstack([np.ones((raw_data.shape[0], 1)), X_Scaled])
 (X_train, Y_train, X_test, Y_test) = splitter(
     data=weighted_input, label=raw_label, splitPrecent=1.0
 )
-effect_of_sample_size_scenario(weightedInput=weighted_input, label=raw_label)
-effect_of_learning_rate_scenario(weightedInput=weighted_input, label=raw_label)
-models_comparison_data_percentage_scenario(
-    weightedInput=weighted_input, label=raw_label
-)
-models_comparison_learning_rate_scenario(weightedInput=weighted_input, label=raw_label)
+
+precision_accuracy_curves_scenario(weightedInput=weighted_input, label=raw_label)
+# effect_of_sample_size_scenario(weightedInput=weighted_input, label=raw_label)
+# effect_of_learning_rate_scenario(weightedInput=weighted_input, label=raw_label)
+# models_comparison_data_percentage_scenario(
+# weightedInput=weighted_input, label=raw_label
+# )
+# models_comparison_learning_rate_scenario(weightedInput=weighted_input, label=raw_label)

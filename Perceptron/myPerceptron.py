@@ -1,6 +1,6 @@
 import numpy as np
 
-from evaluation import accuracy, f1_measure, precision, recall
+from evaluation import accuracy, f1_measure, loss_calculator, precision, recall
 
 
 class Perceptron:
@@ -22,13 +22,9 @@ class Perceptron:
         else:
             return -1
 
-    def loss_calculator(self, X, Y):
-        prediction = X.dot(self.W)
-        TP = np.sum((prediction > 0) & (Y > 0))
-        TN = np.sum((prediction < 0) & (Y < 0))
-        FP = np.sum((prediction > 0) & (Y < 0))
-        FN = np.sum((prediction < 0) & (Y > 0))
-        return (TP, TN, FP, FN)
+    def predict(self, X):
+        result = X.dot(self.W)
+        return np.where(result > 0, 1, -1)
 
     def eval_calculator(
         self, test_TP, test_TN, test_FP, test_FN, train_TP, train_TN, train_FP, train_FN
@@ -69,36 +65,31 @@ class Perceptron:
                     gradient = -(x_i * t_i)
                     self.W -= lr * gradient
 
-            (train_TP, train_TN, train_FP, train_FN) = self.loss_calculator(
-                X_train, Y_train
-            )
-            (test_TP, test_TN, test_FP, test_FN) = self.loss_calculator(X_test, Y_test)
-            (
-                train_acc,
-                train_recall,
-                train_precision,
-                train_f1_measure,
-                test_acc,
-                test_recall,
-                test_precision,
-                test_f1_measure,
-            ) = self.eval_calculator(
-                test_TP,
-                test_TN,
-                test_FP,
-                test_FN,
-                train_TP,
-                train_TN,
-                train_FP,
-                train_FN,
+            test_pred = self.predict(X_test)
+            train_pred = self.predict(X_train)
+            (train_TP, train_TN, train_FP, train_FN) = loss_calculator(
+                train_pred, Y_train
             )
 
-            self.train_accuracies.append(train_acc)
-            self.train_precisions.append(train_precision)
-            self.train_recalls.append(train_recall)
-            self.train_f1_measures.append(train_f1_measure)
+            (test_TP, test_TN, test_FP, test_FN) = loss_calculator(test_pred, Y_test)
 
+            train_acc = accuracy(TP=train_TP, TN=train_TN, FP=train_FP, FN=train_FN)
+            train_recall = recall(TP=train_TP, FN=train_FN)
+            train_precision = precision(TP=train_TP, FP=train_FP)
+            train_f1_measure = f1_measure(
+                precision=train_precision, recall=train_recall
+            )
+
+            test_acc = accuracy(TP=test_TP, TN=test_TN, FP=test_FP, FN=test_FN)
+
+            test_recall = recall(TP=test_TP, FN=test_FN)
+            test_precision = precision(TP=test_TP, FP=test_FP)
+            test_f1_measure = f1_measure(precision=test_precision, recall=test_recall)
             self.test_accuracies.append(test_acc)
-            self.test_precisions.append(test_precision)
             self.test_recalls.append(test_recall)
             self.test_f1_measures.append(test_f1_measure)
+            self.test_precisions.append(test_precision)
+            self.train_accuracies.append(train_acc)
+            self.train_recalls.append(train_recall)
+            self.train_f1_measures.append(train_f1_measure)
+            self.train_precisions.append(train_precision)

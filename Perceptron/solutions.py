@@ -1,11 +1,12 @@
 from matplotlib import pyplot as plt
 import numpy as np
+from myPerceptron import Perceptron
 from models import perceptron_from_sklearn, perceptron_my_model
 from modelRunners import (
     model_runner_for_each_data_percentage,
     model_runner_for_each_learning_rate,
 )
-from utils import plotter
+from utils import plotter, splitter
 
 
 EPOCHS = 100
@@ -30,10 +31,11 @@ def effect_of_sample_size_scenario(weightedInput, label):
         epoch=EPOCHS,
         model_function=perceptron_my_model,
     )
+    step = EPOCHS / 100
     plotter(
-        values_arr=[model_train_accuracy, model_test_accuracy],
-        line_label_arr=["Train accuracy", "Test accuracy"],
-        x_values=x_values,
+        values_arr=[model_train_precision[::step], model_train_accuracy[::step]],
+        line_label_arr=["precision", " accuracy"],
+        x_values=x_values[::step],
         x_label="Data%",
         y_label="Loss value",
         title="Sample Size Effect (My Perceptron)",
@@ -186,16 +188,16 @@ def models_comparison_data_percentage_scenario(weightedInput, label):
     plotter(
         x_values=x_values,
         values_arr=[
-            model_train_accuracy,
             model_test_accuracy,
-            train_accuracy,
+            model_test_precision,
             test_accuracy,
+            train_precision,
         ],
         line_label_arr=[
-            "My Perceptron Train acc",
             "My Perceptron Test acc",
-            "Sk Regressor Train acc",
+            "My Perceptron Test prec",
             "Sk Regressor Test acc",
+            "Sk Regressor Test prec",
         ],
         x_label="Learning Rate",
         y_label="Loss",
@@ -206,32 +208,29 @@ def models_comparison_data_percentage_scenario(weightedInput, label):
     )
 
 
-# plotter(
-#     x_values=np.arange(0, 20, 1),
-#     values_arr=[
-#         model.train_FP,
-#         model.train_FN,
-#         model.train_TP,
-#         model.train_TN,
-#         model.test_FP,
-#         model.test_FN,
-#         model.test_TP,
-#         model.test_TN,
-#     ],
-#     line_label_arr=[
-#         "Train FP",
-#         "Train FN",
-#         "Train TP",
-#         "Train TN",
-#         "Test FP",
-#         "Test FN",
-#         "Test TP",
-#         "Test TN",
-#     ],
-#     x_label="Epochs",
-#     y_label="Value",
-#     file_name="Test",
-#     title="Test",
-#     show_values_for_each=True,
-#     show_percentage_for_x=False,
-# )
+def precision_accuracy_curves_scenario(weightedInput, label):
+    (X_train, Y_train, X_test, Y_test) = splitter(
+        data=weightedInput, label=label, splitPrecent=1.0
+    )
+    model = Perceptron(weightedInput.shape[1])
+    model.SGD(
+        X_train=X_train,
+        Y_train=Y_train,
+        X_test=X_test,
+        Y_test=Y_test,
+        lr=LR,
+        epochs=EPOCHS,
+    )
+    step = int(EPOCHS / 100)
+
+    plotter(
+        values_arr=[model.test_recalls[::step], model.test_precisions[::step]],
+        line_label_arr=["recall", " precision"],
+        x_values=np.arange(0, EPOCHS, step),
+        x_label="Data%",
+        y_label="Loss value",
+        title=" Effect (My Perceptron)",
+        show_percentage_for_x=False,
+        show_values_for_each=True,
+        file_name=" Effect",
+    )

@@ -15,8 +15,10 @@ def linearRegressor_from_sklearn(data, label, lr, epochs, splitPercent):
         loss="squared_error",
         learning_rate="constant",
         eta0=lr,
+        tol=False,
         max_iter=epochs,
-        random_state=42,
+        fit_intercept=False,
+        random_state=0,
     )
     regressor.fit(X_train, Y_train)
     y_test_pred = regressor.predict(X_test)

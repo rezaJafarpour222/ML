@@ -1,3 +1,4 @@
+from typing import Mapping
 from myPerceptron import Perceptron
 from sklearn.linear_model import Perceptron as skPerceptron
 from utils import splitter
@@ -9,7 +10,14 @@ def perceptron_from_sklearn(data, label, lr, epochs, splitPercent):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercent
     )
-    model = skPerceptron(max_iter=epochs, eta0=lr, tol=None)
+    model = skPerceptron(
+        max_iter=epochs,
+        eta0=lr,
+        tol=None,
+        fit_intercept=False,
+        random_state=0,
+        class_weight=None,
+    )
     model.fit(X_train, Y_train)
     train_pred = model.predict(X_train)
     test_pred = model.predict(X_test)

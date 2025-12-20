@@ -25,9 +25,9 @@ def recall(TP, FN):
 
 
 def precision(TP, FP):
-    denominator = FP + TP
+    denominator = TP + FP
     if denominator != 0:
-        return TP / (FP + TP)
+        return TP / denominator
     return 0
 
 
