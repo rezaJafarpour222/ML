@@ -1,12 +1,10 @@
-from typing import Mapping
+from evaluation import accuracy, f1_measure, loss_calculator, precision, recall
 from myPerceptron import Perceptron
 from sklearn.linear_model import Perceptron as skPerceptron
 from utils import splitter
-from evaluation import f1_measure, accuracy, loss_calculator, precision, recall
 
 
 def perceptron_from_sklearn(data, label, lr, epochs, splitPercent):
-
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercent
     )
@@ -48,7 +46,6 @@ def perceptron_from_sklearn(data, label, lr, epochs, splitPercent):
 
 
 def perceptron_my_model(data, label, lr, epochs, splitPercent):
-
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercent
     )
