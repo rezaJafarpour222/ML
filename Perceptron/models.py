@@ -1,4 +1,4 @@
-from evaluation import accuracy, f1_measure, loss_calculator, precision, recall
+from metrics import accuracy, f1_measure, loss_calculator, precision, recall
 from myPerceptron import Perceptron
 from sklearn.linear_model import Perceptron as skPerceptron
 from utils import splitter
@@ -60,12 +60,12 @@ def perceptron_my_model(data, label, lr, epochs, splitPercent):
     )
 
     return (
-        model.train_accuracies[epochs - 1],
-        model.test_accuracies[epochs - 1],
-        model.train_recalls[epochs - 1],
-        model.test_recalls[epochs - 1],
-        model.train_precisions[epochs - 1],
-        model.test_precisions[epochs - 1],
-        model.train_f1_measures[epochs - 1],
-        model.test_f1_measures[epochs - 1],
+        model.train_accuracies[-1],
+        model.test_accuracies[-1],
+        model.train_recalls[-1],
+        model.test_recalls[-1],
+        model.train_precisions[-1],
+        model.test_precisions[-1],
+        model.train_f1_measures[-1],
+        model.test_f1_measures[-1],
     )

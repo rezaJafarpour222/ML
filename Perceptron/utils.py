@@ -14,7 +14,7 @@ def z_score_scaler(X):
 
 
 def splitter(splitPrecent, data, label):
-    np.random.seed(1000)
+    np.random.seed(6)
     data_indices = np.arange(data.shape[0])
     np.random.shuffle(data_indices)
 

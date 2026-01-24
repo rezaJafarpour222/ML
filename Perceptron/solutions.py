@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 import numpy as np
 from myPerceptron import Perceptron
 from models import perceptron_from_sklearn, perceptron_my_model
@@ -9,7 +8,7 @@ from modelRunners import (
 from utils import plotter, splitter
 
 
-EPOCHS = 20000
+EPOCHS = 50
 LR = 0.001
 
 
@@ -31,11 +30,29 @@ def effect_of_sample_size_scenario(weightedInput, label):
         epoch=EPOCHS,
         model_function=perceptron_my_model,
     )
-    step = int(EPOCHS / EPOCHS)
+    # step = int(EPOCHS / EPOCHS)
     plotter(
-        values_arr=[model_train_precision[::step], model_train_accuracy[::step]],
-        line_label_arr=["precision", " accuracy"],
-        x_values=x_values[::step],
+        values_arr=[
+            model_train_accuracy,
+            model_test_accuracy,
+            model_train_recall,
+            model_test_recall,
+            model_train_precision,
+            model_test_precision,
+            model_train_f1,
+            model_test_f1,
+        ],
+        line_label_arr=[
+            "Train accuracy ",
+            "Test accuracy ",
+            "Train recall",
+            "Test recall",
+            "Train precision",
+            "Test precision",
+            "Train f1",
+            "Test f1",
+        ],
+        x_values=x_values,
         x_label="Data%",
         y_label="Loss value",
         title="Sample Size Effect (My Perceptron)",
@@ -69,12 +86,20 @@ def effect_of_learning_rate_scenario(weightedInput, label):
             model_test_accuracy,
             model_train_recall,
             model_test_recall,
+            model_train_precision,
+            model_test_precision,
+            model_train_f1,
+            model_test_f1,
         ],
         line_label_arr=[
             "Train accuracy ",
             "Test accuracy ",
-            "train recall",
-            "test recall",
+            "Train recall",
+            "Test recall",
+            "Train precision",
+            "Test precision",
+            "Train f1",
+            "Test f1",
         ],
         x_label="Learning Rate",
         y_label="Train Loss",
@@ -88,14 +113,14 @@ def effect_of_learning_rate_scenario(weightedInput, label):
 def models_comparison_learning_rate_scenario(weightedInput, label):
 
     (
-        model_train_accuracy,
-        model_train_precision,
-        model_train_recall,
-        model_train_f1,
+        _,
+        _,
+        _,
+        _,
         model_test_accuracy,
         model_test_precision,
         model_test_recall,
-        model_test_f1,
+        _,
         x_values,
     ) = model_runner_for_each_learning_rate(
         data=weightedInput,
@@ -104,14 +129,14 @@ def models_comparison_learning_rate_scenario(weightedInput, label):
         model_function=perceptron_my_model,
     )
     (
-        train_accuracy,
-        train_precision,
-        train_recall,
-        train_f1,
+        _,
+        _,
+        _,
+        _,
         test_accuracy,
         test_precision,
         test_recall,
-        test_f1,
+        _,
         x_values,
     ) = model_runner_for_each_learning_rate(
         data=weightedInput,
@@ -125,16 +150,16 @@ def models_comparison_learning_rate_scenario(weightedInput, label):
             model_test_precision,
             model_test_accuracy,
             model_test_recall,
-            train_precision,
-            train_accuracy,
-            train_recall,
+            test_precision,
+            test_accuracy,
+            test_recall,
         ],
         line_label_arr=[
-            "My  perc",
-            "My  acc",
+            "My  precision",
+            "My  accurracy",
             "My  recall",
-            "Sk  prec",
-            "Sk  acc",
+            "Sk  precision",
+            "Sk  accuracy",
             "Sk  recall",
         ],
         x_label="Learning Rate",
@@ -148,10 +173,10 @@ def models_comparison_learning_rate_scenario(weightedInput, label):
 
 def models_comparison_data_percentage_scenario(weightedInput, label):
     (
-        model_train_accuracy,
-        model_train_precision,
-        model_train_recall,
-        model_train_f1,
+        _,
+        _,
+        _,
+        _,
         model_test_accuracy,
         model_test_precision,
         model_test_recall,
@@ -165,10 +190,10 @@ def models_comparison_data_percentage_scenario(weightedInput, label):
         model_function=perceptron_my_model,
     )
     (
-        train_accuracy,
-        train_precision,
-        train_recall,
-        train_f1,
+        _,
+        _,
+        _,
+        _,
         test_accuracy,
         test_precision,
         test_recall,
@@ -194,16 +219,16 @@ def models_comparison_data_percentage_scenario(weightedInput, label):
             test_f1,
         ],
         line_label_arr=[
-            "my acc",
-            "my prec",
+            "my accuracy",
+            "my precision",
             "my recall",
             "my f1",
-            "sk acc",
-            "sk prec",
+            "sk accuracy",
+            "sk precision",
             "sk recall",
             "sk f1",
         ],
-        x_label="Learning Rate",
+        x_label="Data percentage",
         y_label="Loss",
         show_values_for_each=True,
         title="Data Percentage Model Comparison",
@@ -212,7 +237,7 @@ def models_comparison_data_percentage_scenario(weightedInput, label):
     )
 
 
-def precision_accuracy_curves_scenario(weightedInput, label):
+def metrics_scenario(weightedInput, label):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=weightedInput, label=label, splitPrecent=1.0
     )
@@ -228,13 +253,31 @@ def precision_accuracy_curves_scenario(weightedInput, label):
     step = int(EPOCHS / 10)
 
     plotter(
-        values_arr=[model.train_precisions[::step], model.test_precisions[::step]],
-        line_label_arr=["train precision", " test precision"],
+        values_arr=[
+            model.train_accuracies[::step],
+            model.test_accuracies[::step],
+            model.train_precisions[::step],
+            model.test_precisions[::step],
+            model.train_recalls[::step],
+            model.test_recalls[::step],
+            model.train_f1_measures[::step],
+            model.test_f1_measures[::step],
+        ],
+        line_label_arr=[
+            "Train accuracy ",
+            "Test accuracy ",
+            "Train precision",
+            "Test precision",
+            "Train recall",
+            "Test recall",
+            "Train f1",
+            "Test f1",
+        ],
         x_values=np.arange(0, EPOCHS, step),
         x_label="Epoch",
         y_label="Loss value",
-        title=" Effect (My Perceptron)",
+        title=" Metrics(My Perceptron)",
         show_percentage_for_x=False,
         show_values_for_each=True,
-        file_name=" Effect",
+        file_name=" Metrics",
     )

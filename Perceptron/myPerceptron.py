@@ -1,114 +1,88 @@
 import numpy as np
 
-from evaluation import accuracy, f1_measure, loss_calculator, precision, recall
+from metrics import (
+    accuracy,
+    precision,
+    loss_calculator,
+    recall,
+    f1_measure,
+)
 
 
 class Perceptron:
-
     def __init__(self, features):
         self.W = np.zeros(features)
+
         self.train_accuracies = []
         self.train_recalls = []
         self.train_precisions = []
         self.train_f1_measures = []
+
         self.test_accuracies = []
         self.test_recalls = []
         self.test_precisions = []
         self.test_f1_measures = []
 
     def predict_for_one(self, x):
-        if (np.dot(self.W, x)) > 0:
-            return 1
-        else:
-            return -1
+        return np.where(x.dot(self.W) > 0, 1, -1)
 
     def predict(self, X):
-        result = X.dot(self.W)
-        return np.where(result > 0, 1, -1)
-
-    def eval_calculator(
-        self, test_TP, test_TN, test_FP, test_FN, train_TP, train_TN, train_FP, train_FN
-    ):
-        train_acc = accuracy(TP=train_TP, TN=train_TN, FP=train_FP, FN=train_FN)
-        train_recall = recall(TP=train_TP, FN=train_FN)
-        train_precision = precision(TP=train_TP, FP=train_FP)
-        train_f1_measure = f1_measure(precision=train_precision, recall=train_recall)
-
-        test_acc = accuracy(TP=test_TP, TN=test_TN, FP=test_FP, FN=test_FN)
-        test_recall = recall(TP=test_TP, FN=test_FN)
-        test_precision = precision(TP=test_TP, FP=test_FP)
-        test_f1_measure = f1_measure(precision=test_precision, recall=test_recall)
-        return (
-            train_acc,
-            train_recall,
-            train_precision,
-            train_f1_measure,
-            test_acc,
-            test_recall,
-            test_precision,
-            test_f1_measure,
-        )
-
-    def new_W_better(self, X, Y, new_w, old_w):
-        new_pred = np.where(X.dot(new_w) > 0, 1, -1)
-        (train_TP, train_TN, train_FP, train_FN) = loss_calculator(new_pred, Y)
-        old_pred = np.where(X.dot(old_w) > 0, 1, -1)
-        test_acc_new = precision(TP=train_TP, FP=train_FP)
-        (old_train_TP, old_train_TN, old_train_FP, old_train_FN) = loss_calculator(
-            old_pred, Y
-        )
-        test_acc_old = precision(TP=old_train_TP, FP=old_train_FP)
-        if test_acc_new > test_acc_old:
-            return True
-        else:
-            return False
+        return np.where(X.dot(self.W) > 0, 1, -1)
 
     def SGD(self, X_train, Y_train, X_test, Y_test, lr, epochs):
         indices = np.arange(X_train.shape[0])
-        for _ in range(epochs):
 
+        # pocket vars
+        best_W = self.W.copy()
+        best_recall = -1
+
+        for _ in range(epochs):
             rand_idx = np.random.permutation(indices)
             X_train_shuffled = X_train[rand_idx]
             Y_train_shuffled = Y_train[rand_idx]
-            old_w = self.W.copy()
-            for index in range(len(indices)):
-                x_i = X_train_shuffled[index]
-                t_i = Y_train_shuffled[index]
-                is_update_needed = t_i * self.predict_for_one(x_i)
-                if is_update_needed <= 0:
-                    gradient = -(x_i * t_i)
-                    w_new = lr * gradient
-                    train_pred = self.predict(X_train)
 
-                    self.W -= w_new
-            # Pocketing part
-            if not self.new_W_better(X=X_train, Y=Y_train, new_w=self.W, old_w=old_w):
-                self.W = old_w
-            test_pred = self.predict(X_test)
+            for i in range(len(indices)):
+                x_i = X_train_shuffled[i]
+                y_i = Y_train_shuffled[i]
+
+                if y_i * np.dot(self.W, x_i) <= 0:
+                    self.W += lr * y_i * x_i
+
+                    # pocketing part
+                    train_pred = self.predict(X_train)
+                    TP, TN, FP, FN = loss_calculator(train_pred, Y_train)
+                    rec = recall(TP=TP, FN=FN)
+
+                    if rec > best_recall:
+                        best_recall = rec
+                        best_W = self.W.copy()
+
             train_pred = self.predict(X_train)
-            (train_TP, train_TN, train_FP, train_FN) = loss_calculator(
+            test_pred = self.predict(X_test)
+
+            train_TP, train_TN, train_FP, train_FN = loss_calculator(
                 train_pred, Y_train
             )
+            test_TP, test_TN, test_FP, test_FN = loss_calculator(test_pred, Y_test)
 
-            (test_TP, test_TN, test_FP, test_FN) = loss_calculator(test_pred, Y_test)
+            train_acc = accuracy(train_TP, train_TN, train_FP, train_FN)
+            train_rec = recall(train_TP, train_FN)
+            train_prec = precision(train_TP, train_FP)
+            train_f1 = f1_measure(train_prec, train_rec)
 
-            train_acc = accuracy(TP=train_TP, TN=train_TN, FP=train_FP, FN=train_FN)
-            train_recall = recall(TP=train_TP, FN=train_FN)
-            train_precision = precision(TP=train_TP, FP=train_FP)
-            train_f1_measure = f1_measure(
-                precision=train_precision, recall=train_recall
-            )
+            test_acc = accuracy(test_TP, test_TN, test_FP, test_FN)
+            test_rec = recall(test_TP, test_FN)
+            test_prec = precision(test_TP, test_FP)
+            test_f1 = f1_measure(test_prec, test_rec)
 
-            test_acc = accuracy(TP=test_TP, TN=test_TN, FP=test_FP, FN=test_FN)
-
-            test_recall = recall(TP=test_TP, FN=test_FN)
-            test_precision = precision(TP=test_TP, FP=test_FP)
-            test_f1_measure = f1_measure(precision=test_precision, recall=test_recall)
-            self.test_accuracies.append(test_acc)
-            self.test_recalls.append(test_recall)
-            self.test_f1_measures.append(test_f1_measure)
-            self.test_precisions.append(test_precision)
             self.train_accuracies.append(train_acc)
-            self.train_recalls.append(train_recall)
-            self.train_f1_measures.append(train_f1_measure)
-            self.train_precisions.append(train_precision)
+            self.train_recalls.append(train_rec)
+            self.train_precisions.append(train_prec)
+            self.train_f1_measures.append(train_f1)
+
+            self.test_accuracies.append(test_acc)
+            self.test_recalls.append(test_rec)
+            self.test_precisions.append(test_prec)
+            self.test_f1_measures.append(test_f1)
+
+        self.W = best_W
