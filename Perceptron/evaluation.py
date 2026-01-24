@@ -20,7 +20,7 @@ def accuracy(TP, TN, FP, FN):
 def recall(TP, FN):
     denominator = TP + FN
     if denominator != 0:
-        return TP / (TP + FN)
+        return TP / denominator
     return 0
 
 

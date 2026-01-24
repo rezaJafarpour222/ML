@@ -49,6 +49,20 @@ class Perceptron:
             test_f1_measure,
         )
 
+    def new_W_better(self, X, Y, new_w, old_w):
+        new_pred = np.where(X.dot(new_w) > 0, 1, -1)
+        (train_TP, train_TN, train_FP, train_FN) = loss_calculator(new_pred, Y)
+        old_pred = np.where(X.dot(old_w) > 0, 1, -1)
+        test_acc_new = precision(TP=train_TP, FP=train_FP)
+        (old_train_TP, old_train_TN, old_train_FP, old_train_FN) = loss_calculator(
+            old_pred, Y
+        )
+        test_acc_old = precision(TP=old_train_TP, FP=old_train_FP)
+        if test_acc_new > test_acc_old:
+            return True
+        else:
+            return False
+
     def SGD(self, X_train, Y_train, X_test, Y_test, lr, epochs):
         indices = np.arange(X_train.shape[0])
         for _ in range(epochs):
@@ -56,15 +70,20 @@ class Perceptron:
             rand_idx = np.random.permutation(indices)
             X_train_shuffled = X_train[rand_idx]
             Y_train_shuffled = Y_train[rand_idx]
-
+            old_w = self.W.copy()
             for index in range(len(indices)):
                 x_i = X_train_shuffled[index]
                 t_i = Y_train_shuffled[index]
                 is_update_needed = t_i * self.predict_for_one(x_i)
                 if is_update_needed <= 0:
                     gradient = -(x_i * t_i)
-                    self.W -= lr * gradient
+                    w_new = lr * gradient
+                    train_pred = self.predict(X_train)
 
+                    self.W -= w_new
+            # Pocketing part
+            if not self.new_W_better(X=X_train, Y=Y_train, new_w=self.W, old_w=old_w):
+                self.W = old_w
             test_pred = self.predict(X_test)
             train_pred = self.predict(X_train)
             (train_TP, train_TN, train_FP, train_FN) = loss_calculator(
