@@ -34,7 +34,7 @@ def splitter(splitPrecent, data, label):
     return (X_train, Y_train, X_test, Y_test)
 
 
-def plotter(values_arr, label_arr, file_name, y_label, title="default", width=0.2):
+def plotter(values_arr, label_arr, file_name, y_label, width=0.2):
     plt.figure(figsize=(16, 9), dpi=100)
     colors = [
         "red",
@@ -60,7 +60,7 @@ def plotter(values_arr, label_arr, file_name, y_label, title="default", width=0.
         )
     plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y*100:.0f}%"))
     plt.ylim(0, 1.05)
-    plt.title(title)
+    plt.title(file_name)
     # plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.grid(False, linestyle="--", alpha=0.6)

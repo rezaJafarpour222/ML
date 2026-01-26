@@ -26,7 +26,6 @@ def SVM_Scenario(weighted_input, label):
                 kernel=kernels[k],
                 C=c[i],
                 fileName=filenames[counter],
-                title=filenames[counter],
             )
             counter += 1
 
@@ -46,7 +45,6 @@ def LDA_Scenario(weighted_input, label):
             label=label,
             solver=solvers[k],
             fileName=filenames[counter],
-            title=filenames[counter],
         )
         counter += 1
 
@@ -82,6 +80,17 @@ def DecisionTree_Scenario(weighted_input, label):
                 sample_leaf=min_sample_leaf[0],
                 sample_split=min_split[0],
                 fileName=filenames[counter],
-                title=filenames[counter],
             )
             counter += 1
+
+
+def Best_Configuration_Comparison(weighted_input, label):
+    DecisionTree_metrics(
+        weightedInput=weighted_input,
+        label=label,
+        max_depth=5,
+        sample_leaf=5,
+        sample_split=5,
+        fileName="",
+        title="",
+    )

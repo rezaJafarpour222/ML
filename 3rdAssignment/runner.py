@@ -4,7 +4,7 @@ import algorithms
 from util import plotter
 
 
-def SVM_metrics(weightedInput, label, kernel, fileName, title, C=1):
+def SVM_metrics(weightedInput, label, kernel, fileName, C=1):
 
     (
         train_acc,
@@ -35,14 +35,13 @@ def SVM_metrics(weightedInput, label, kernel, fileName, title, C=1):
         ],
         file_name=fileName,
         y_label="Score",
-        title=title,
         width=0.2,
     )
     return (test_acc, test_precision, test_recall)
 
 
 def LDA_metrics(
-    weightedInput, label, fileName, title, solver: Literal["svd", "isqr", "eigen"]
+    weightedInput, label, fileName, solver: Literal["svd", "isqr", "eigen"]
 ):
     (
         train_acc,
@@ -73,7 +72,6 @@ def LDA_metrics(
         ],
         file_name=fileName,
         y_label="Score",
-        title=title,
         width=0.2,
     )
 
@@ -85,7 +83,6 @@ def DecisionTree_metrics(
     label,
     max_depth,
     fileName,
-    title,
     sample_leaf=5,
     sample_split=5,
     criterion: Literal["gini", "entropy", "log_loss"] = "entropy",
@@ -126,19 +123,17 @@ def DecisionTree_metrics(
         ],
         file_name=fileName,
         y_label="Score",
-        title=title,
         width=0.2,
     )
 
     return (test_acc, test_precision, test_recall)
 
 
-def comparison(values, labels, fileName, title):
+def comparison(values, labels, fileName):
     plotter(
         values_arr=values,
         label_arr=labels,
         file_name=fileName,
         y_label="Score",
-        title=title,
         width=0.2,
     )
