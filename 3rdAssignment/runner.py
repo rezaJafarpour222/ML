@@ -1,8 +1,10 @@
+from typing import Literal
+from unittest import TestCase
 import algorithms
 from util import plotter
 
 
-def SVM_metrics(weightedInput, label):
+def SVM_metrics(weightedInput, label, kernel, fileName, title, C=1):
 
     (
         train_acc,
@@ -13,7 +15,7 @@ def SVM_metrics(weightedInput, label):
         test_precision,
         train_f1_measure,
         test_f1_measure,
-    ) = algorithms.SVM_model(data=weightedInput, label=label, splitPercentage=1.0)
+    ) = algorithms.SVM_model(data=weightedInput, label=label, kernel=kernel, C=C)
     plotter(
         values_arr=[
             train_acc,
@@ -31,14 +33,17 @@ def SVM_metrics(weightedInput, label):
             "Test Recall",
             "Test Precision",
         ],
-        file_name="SVM",
+        file_name=fileName,
         y_label="Score",
-        title="SVM Metrics",
+        title=title,
         width=0.2,
     )
+    return (test_acc, test_precision, test_recall)
 
 
-def LDA_metrics(weightedInput, label):
+def LDA_metrics(
+    weightedInput, label, fileName, title, solver: Literal["svd", "isqr", "eigen"]
+):
     (
         train_acc,
         test_acc,
@@ -48,7 +53,7 @@ def LDA_metrics(weightedInput, label):
         test_precision,
         train_f1_measure,
         test_f1_measure,
-    ) = algorithms.LDA_model(data=weightedInput, label=label, splitPercentage=1.0)
+    ) = algorithms.LDA_model(data=weightedInput, label=label, solver=solver)
     plotter(
         values_arr=[
             train_acc,
@@ -66,14 +71,25 @@ def LDA_metrics(weightedInput, label):
             "Test Recall",
             "Test Precision",
         ],
-        file_name="LDA",
+        file_name=fileName,
         y_label="Score",
-        title="LDA Metrics",
+        title=title,
         width=0.2,
     )
 
+    return (test_acc, test_precision, test_recall)
 
-def DecisionTree_metrics(weightedInput, label):
+
+def DecisionTree_metrics(
+    weightedInput,
+    label,
+    max_depth,
+    fileName,
+    title,
+    sample_leaf=5,
+    sample_split=5,
+    criterion: Literal["gini", "entropy", "log_loss"] = "entropy",
+):
     (
         train_acc,
         test_acc,
@@ -84,7 +100,12 @@ def DecisionTree_metrics(weightedInput, label):
         train_f1_measure,
         test_f1_measure,
     ) = algorithms.DecisionTree_model(
-        data=weightedInput, label=label, splitPercentage=1.0
+        data=weightedInput,
+        label=label,
+        max_depth=max_depth,
+        samples_leaf=sample_leaf,
+        samples_split=sample_split,
+        criterion=criterion,
     )
     plotter(
         values_arr=[
@@ -103,71 +124,21 @@ def DecisionTree_metrics(weightedInput, label):
             "Test Recall",
             "Test Precision",
         ],
-        file_name="Decision Tree",
+        file_name=fileName,
         y_label="Score",
-        title="Decision Tree Metrics",
+        title=title,
         width=0.2,
     )
 
+    return (test_acc, test_precision, test_recall)
 
-def models_comparison(weightedInput, label):
-    (
-        _,
-        TREE_test_acc,
-        _,
-        TREE_test_recall,
-        _,
-        TREE_test_precision,
-        _,
-        _,
-    ) = algorithms.DecisionTree_model(
-        data=weightedInput, label=label, splitPercentage=1.0
-    )
-    (
-        _,
-        SVM_test_acc,
-        _,
-        SVM_test_recall,
-        _,
-        SVM_test_precision,
-        _,
-        _,
-    ) = algorithms.SVM_model(data=weightedInput, label=label, splitPercentage=1.0)
-    (
-        _,
-        LDA_test_acc,
-        _,
-        LDA_test_recall,
-        _,
-        LDA_test_precision,
-        _,
-        _,
-    ) = algorithms.LDA_model(data=weightedInput, label=label, splitPercentage=1.0)
+
+def comparison(values, labels, fileName, title):
     plotter(
-        values_arr=[
-            TREE_test_acc,
-            SVM_test_acc,
-            LDA_test_acc,
-            TREE_test_precision,
-            SVM_test_precision,
-            LDA_test_precision,
-            TREE_test_recall,
-            SVM_test_recall,
-            LDA_test_recall,
-        ],
-        label_arr=[
-            "Tree Accuracy",
-            "SVM Accuracy",
-            "LDA Accuracy",
-            "Tree Recall",
-            "SVM Recall",
-            "LDA Recall",
-            "Tree Precision",
-            "SVM Precision",
-            "LDA Precision",
-        ],
-        file_name="Models Comparison (Test)",
+        values_arr=values,
+        label_arr=labels,
+        file_name=fileName,
         y_label="Score",
-        title="Models Comparison (Test)",
+        title=title,
         width=0.2,
     )

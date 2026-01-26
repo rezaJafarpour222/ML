@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
-
+from solution import DecisionTree_Scenario, LDA_Scenario, SVM_Scenario
 from util import splitter, z_score_scaler
-import comparison
 
 raw_data = pd.read_csv("Perceptron/DataSets/pima-indians-diabetes.csv", header=None)
 raw_data.iloc[:, 8] = raw_data.iloc[:, 8].replace(0, -1)
@@ -14,7 +13,7 @@ weighted_input = np.hstack([np.ones((raw_data.shape[0], 1)), X_Scaled])
 (X_train, Y_train, X_test, Y_test) = splitter(
     data=weighted_input, label=raw_label, splitPrecent=1.0
 )
-comparison.SVM_metrics(weightedInput=weighted_input, label=raw_label)
-comparison.LDA_metrics(weightedInput=weighted_input, label=raw_label)
-comparison.DecisionTree_metrics(weightedInput=weighted_input, label=raw_label)
-comparison.models_comparison(weightedInput=weighted_input, label=raw_label)
+# SVM_Scenario(weighted_input=weighted_input, label=raw_label)
+# LDA_Scenario(weighted_input=weighted_input, label=raw_label)
+
+DecisionTree_Scenario(weighted_input=weighted_input, label=raw_label)

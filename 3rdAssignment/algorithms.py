@@ -1,3 +1,4 @@
+from typing import Literal
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -6,11 +7,11 @@ from metrics import accuracy, f1_measure, loss_calculator, precision, recall
 from util import splitter
 
 
-def SVM_model(data, label, splitPercentage):
+def SVM_model(data, label, kernel: Literal["linear", "rbf"], C=1):
     (X_train, Y_train, X_test, Y_test) = splitter(
-        data=data, label=label, splitPrecent=splitPercentage
+        data=data, label=label, splitPrecent=1.0
     )
-    model = SVC(kernel="linear")
+    model = SVC(kernel=kernel, C=C)
     model.fit(X_train, Y_train)
     train_pred = model.predict(X_train)
     test_pred = model.predict(X_test)
@@ -23,7 +24,6 @@ def SVM_model(data, label, splitPercentage):
     train_f1_measure = f1_measure(precision=train_precision, recall=train_recall)
 
     test_acc = accuracy(TP=test_TP, TN=test_TN, FP=test_FP, FN=test_FN)
-
     test_recall = recall(TP=test_TP, FN=test_FN)
     test_precision = precision(TP=test_TP, FP=test_FP)
     test_f1_measure = f1_measure(precision=test_precision, recall=test_recall)
@@ -40,11 +40,11 @@ def SVM_model(data, label, splitPercentage):
     )
 
 
-def LDA_model(data, label, splitPercentage):
+def LDA_model(data, label, solver: Literal["svd", "lsqr", "eigen"]):
     (X_train, Y_train, X_test, Y_test) = splitter(
-        data=data, label=label, splitPrecent=splitPercentage
+        data=data, label=label, splitPrecent=1.0
     )
-    model = LinearDiscriminantAnalysis(solver="lsqr")
+    model = LinearDiscriminantAnalysis(solver=solver)
     model.fit(X_train, Y_train)
     train_pred = model.predict(X_train)
     test_pred = model.predict(X_test)
@@ -57,7 +57,6 @@ def LDA_model(data, label, splitPercentage):
     train_f1_measure = f1_measure(precision=train_precision, recall=train_recall)
 
     test_acc = accuracy(TP=test_TP, TN=test_TN, FP=test_FP, FN=test_FN)
-
     test_recall = recall(TP=test_TP, FN=test_FN)
     test_precision = precision(TP=test_TP, FP=test_FP)
     test_f1_measure = f1_measure(precision=test_precision, recall=test_recall)
@@ -74,14 +73,22 @@ def LDA_model(data, label, splitPercentage):
     )
 
 
-def DecisionTree_model(data, label, splitPercentage):
+def DecisionTree_model(
+    data,
+    label,
+    max_depth=5,
+    samples_split=5,
+    samples_leaf=5,
+    criterion: Literal["gini", "entropy", "log_loss"] = "entropy",
+):
     (X_train, Y_train, X_test, Y_test) = splitter(
-        data=data, label=label, splitPrecent=splitPercentage
+        data=data, label=label, splitPrecent=1.0
     )
     model = DecisionTreeClassifier(
-        # max_depth=5,
-        # max_leaf_nodes=5,
-        criterion="entropy",
+        max_depth=max_depth,
+        min_samples_split=samples_split,
+        min_samples_leaf=samples_leaf,
+        criterion=criterion,
         random_state=42,
     )
     model.fit(X_train, Y_train)
@@ -96,7 +103,6 @@ def DecisionTree_model(data, label, splitPercentage):
     train_f1_measure = f1_measure(precision=train_precision, recall=train_recall)
 
     test_acc = accuracy(TP=test_TP, TN=test_TN, FP=test_FP, FN=test_FN)
-
     test_recall = recall(TP=test_TP, FN=test_FN)
     test_precision = precision(TP=test_TP, FP=test_FP)
     test_f1_measure = f1_measure(precision=test_precision, recall=test_recall)
