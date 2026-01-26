@@ -108,3 +108,66 @@ def DecisionTree_metrics(weightedInput, label):
         title="Decision Tree Metrics",
         width=0.2,
     )
+
+
+def models_comparison(weightedInput, label):
+    (
+        _,
+        TREE_test_acc,
+        _,
+        TREE_test_recall,
+        _,
+        TREE_test_precision,
+        _,
+        _,
+    ) = algorithms.DecisionTree_model(
+        data=weightedInput, label=label, splitPercentage=1.0
+    )
+    (
+        _,
+        SVM_test_acc,
+        _,
+        SVM_test_recall,
+        _,
+        SVM_test_precision,
+        _,
+        _,
+    ) = algorithms.SVM_model(data=weightedInput, label=label, splitPercentage=1.0)
+    (
+        _,
+        LDA_test_acc,
+        _,
+        LDA_test_recall,
+        _,
+        LDA_test_precision,
+        _,
+        _,
+    ) = algorithms.LDA_model(data=weightedInput, label=label, splitPercentage=1.0)
+    plotter(
+        values_arr=[
+            TREE_test_acc,
+            SVM_test_acc,
+            LDA_test_acc,
+            TREE_test_precision,
+            SVM_test_precision,
+            LDA_test_precision,
+            TREE_test_recall,
+            SVM_test_recall,
+            LDA_test_recall,
+        ],
+        label_arr=[
+            "Tree Accuracy",
+            "SVM Accuracy",
+            "LDA Accuracy",
+            "Tree Recall",
+            "SVM Recall",
+            "LDA Recall",
+            "Tree Precision",
+            "SVM Precision",
+            "LDA Precision",
+        ],
+        file_name="Models Comparison (Test)",
+        y_label="Score",
+        title="Models Comparison (Test)",
+        width=0.2,
+    )
