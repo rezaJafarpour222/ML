@@ -1,15 +1,12 @@
-from configparser import MAX_INTERPOLATION_DEPTH
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-from Perceptron.metrics import accuracy, f1_measure, loss_calculator, precision, recall
-from utils import splitter
-
-RANDOM = 42
+from metrics import accuracy, f1_measure, loss_calculator, precision, recall
+from util import splitter
 
 
-def SVM(data, label, splitPercentage):
+def SVM_model(data, label, splitPercentage):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercentage
     )
@@ -43,7 +40,7 @@ def SVM(data, label, splitPercentage):
     )
 
 
-def LDA(data, label, splitPercentage):
+def LDA_model(data, label, splitPercentage):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercentage
     )
@@ -77,7 +74,7 @@ def LDA(data, label, splitPercentage):
     )
 
 
-def DecisionTree(data, label, splitPercentage):
+def DecisionTree_model(data, label, splitPercentage):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=splitPercentage
     )
@@ -85,7 +82,7 @@ def DecisionTree(data, label, splitPercentage):
         # max_depth=5,
         # max_leaf_nodes=5,
         criterion="entropy",
-        random_state=RANDOM,
+        random_state=42,
     )
     model.fit(X_train, Y_train)
     train_pred = model.predict(X_train)

@@ -34,19 +34,8 @@ def splitter(splitPrecent, data, label):
     return (X_train, Y_train, X_test, Y_test)
 
 
-def plotter(
-    x_values,
-    values_arr,
-    line_label_arr,
-    file_name,
-    x_label,
-    y_label,
-    title="default",
-    show_percentage_for_x=False,
-    show_values_for_each=False,
-):
+def plotter(values_arr, label_arr, file_name, y_label, title="default", width=0.2):
     plt.figure(figsize=(16, 9), dpi=100)
-    line_List = []
     colors = [
         "red",
         "blue",
@@ -59,39 +48,24 @@ def plotter(
         "olive",
         "cyan",
     ]
-    markers = ["o", "*", "x", "D", "v", "s", "^", "+", "p", "h"]
-
-    for i in range(len(values_arr)):
-        (line,) = plt.plot(
-            x_values,
-            values_arr[i],
-            label=line_label_arr[i],
-            marker=markers[i],
-            color=colors[i],
+    bars = plt.bar(label_arr, values_arr, color=colors, width=width)
+    for bar in bars:
+        y = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            y,
+            f"{y * 100:.1f}%",  # ← just show the value
+            ha="center",
+            va="bottom",
         )
-        line_List.append(line)
-        if show_values_for_each:
-            for x, y in zip(x_values, values_arr[i]):
-                plt.text(
-                    x,
-                    y,
-                    f"{y:.2f}",
-                    fontsize=9,
-                    ha="center",
-                    va="bottom",
-                    color=colors[i],
-                    alpha=0.7,
-                )
-
-    if show_percentage_for_x:
-        plt.xticks(x_values, [f"{int(x*100)}%" for x in x_values])
-
+    plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f"{y*100:.0f}%"))
+    plt.ylim(0, 1.05)
     plt.title(title)
-    plt.xlabel(x_label)
+    # plt.xlabel(x_label)
     plt.ylabel(y_label)
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend(handles=line_List, loc="best")
+    plt.grid(False, linestyle="--", alpha=0.6)
+    plt.legend(loc="best")
     plt.tight_layout()
-    plt.savefig(f"Perceptron/plots/{file_name}", dpi=500)
+    plt.savefig(f"3rdAssignment/plots/{file_name}", dpi=500)
     plt.close()
     # plt.show()
