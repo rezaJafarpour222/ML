@@ -9,7 +9,7 @@ from models import linearRegressor_from_sklearn, linearRegressor_my_model
 from myRegressor import LinearRegressor
 from utils import plotter, splitter
 
-EPOCHS = 25
+EPOCHS = 30
 LR = 0.001
 
 

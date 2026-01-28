@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib
 
-matplotlib.use("GTK3Agg")  # this line is for linux comment it for windows
+# matplotlib.use("GTK3Agg")  # this line is for linux comment it for windows
 
 import matplotlib.pyplot as plt
 
@@ -14,7 +14,8 @@ def z_score_scaler(X):
 
 
 def splitter(splitPrecent, data, label):
-    np.random.seed(42)
+    np.random.seed(41)
+    
     data_indices = np.arange(data.shape[0])
     np.random.shuffle(data_indices)
 

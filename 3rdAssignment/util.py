@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib
 
-matplotlib.use("GTK3Agg")  # this line is for linux comment it for windows
+# matplotlib.use("GTK3Agg")  # this line is for linux comment it for windows
 
 import matplotlib.pyplot as plt
 

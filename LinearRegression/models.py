@@ -14,6 +14,7 @@ def linearRegressor_from_sklearn(data, label, lr, epochs, splitPercent):
     regressor = SGDRegressor(
         loss="squared_error",
         learning_rate="constant",
+        penalty=None,
         eta0=lr,
         tol=False,
         max_iter=epochs,

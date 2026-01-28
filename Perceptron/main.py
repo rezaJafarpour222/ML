@@ -7,9 +7,12 @@ from solutions import (
     models_comparison_learning_rate_scenario,
     metrics_scenario,
 )
+import matplotlib.pyplot as plt
+import matplotlib
 from utils import splitter, z_score_scaler
 
 raw_data = pd.read_csv("Perceptron/DataSets/pima-indians-diabetes.csv", header=None)
+
 raw_data.iloc[:, 8] = raw_data.iloc[:, 8].replace(0, -1)
 raw_label = raw_data.iloc[:, 8].values
 

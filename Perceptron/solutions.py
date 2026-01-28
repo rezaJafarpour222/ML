@@ -8,7 +8,7 @@ from modelRunners import (
 from utils import plotter, splitter
 
 
-EPOCHS = 50
+EPOCHS = 100
 LR = 0.001
 
 

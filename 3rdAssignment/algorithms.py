@@ -44,7 +44,7 @@ def LDA_model(data, label, solver: Literal["svd", "lsqr", "eigen"]):
     (X_train, Y_train, X_test, Y_test) = splitter(
         data=data, label=label, splitPrecent=1.0
     )
-    model = LinearDiscriminantAnalysis(solver=solver)
+    model = LinearDiscriminantAnalysis(solver=solver, priors=None)
     model.fit(X_train, Y_train)
     train_pred = model.predict(X_train)
     test_pred = model.predict(X_test)
