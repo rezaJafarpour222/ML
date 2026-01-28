@@ -1,4 +1,5 @@
-from runner import DecisionTree_metrics, LDA_metrics, SVM_metrics,comparison
+from runner import DecisionTree_metrics, LDA_metrics, SVM_metrics
+from util import plotter
 
 
 def SVM_Scenario(weighted_input, label):
@@ -95,14 +96,9 @@ def DecisionTree_Scenario(weighted_input, label):
 
 def Best_Configuration_Comparison(weighted_input, label):
     (
-        _,
         DT_test_acc,
-        _,
         DT_test_recall,
-        _,
         DT_test_precision,
-        _,
-        _,
     ) = DecisionTree_metrics(
         weightedInput=weighted_input,
         label=label,
@@ -113,57 +109,51 @@ def Best_Configuration_Comparison(weighted_input, label):
     )
 
     (
-        _,
         LDA_test_acc,
-        _,
         LDA_test_recall,
-        _,
         LDA_test_precision,
-        _,
-        _,
+      
     ) = LDA_metrics(
             weightedInput=weighted_input,
             label=label,
-            solver='svd',
-            fileName="Best LDA(svd, prior=[0.36,0.64])",
+            solver="svd",
+            fileName="Best LDA",
         )
-       (
-        _,
+    (
         SVM_test_acc,
-        _,
         SVM_test_recall,
-        _,
         SVM_test_precision,
-        _,
-        _,
     ) = SVM_metrics(
                 weightedInput=weighted_input,
                 label=label,
-                kernel='rbf',
+                kernel="rbf",
                 C=1,
                 fileName="Best SVM(rbf, c=1)",
             )
-    comparison(
-        [
-        DT_test_acc,
-        LDA_test_acc,
-        SVM_test_acc,
-        DT_test_precision,
-        LDA_test_precision,
-        SVM_test_precision,
-        DT_test_recall,
-        LDA_test_recall
-        SVM_test_recall
+    plotter(
+        values_arr=[
+         DT_test_acc,
+         LDA_test_acc,
+         SVM_test_acc,
+         DT_test_recall,
+         LDA_test_recall,
+         SVM_test_recall,
+         DT_test_precision,
+         LDA_test_precision,
+         SVM_test_precision,
         ],
-        [
-        "DT_test_acc",
-        "LDA_test_acc",
-        "SVM_test_acc",
-        "DT_test_precision",
-        "LDA_test_precision",
-        "SVM_test_precision",
-        "DT_test_recall",
-        "LDA_test_recall"
-        "SVM_test_recall"
+        label_arr=[
+         "DT_test_acc",
+         "LDA_test_acc",
+         "SVM_test_acc",
+         "DT_test_recall",
+         "LDA_test_recall",
+         "SVM_test_recall",
+         "DT_test_precision",
+         "LDA_test_precision",
+         "SVM_test_precision",
         ],
-        "Comparison")
+        file_name="Model Comparison(Best Configuration)",
+        y_label="Score",
+        width=0.2,
+    )

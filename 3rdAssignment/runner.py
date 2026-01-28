@@ -129,11 +129,3 @@ def DecisionTree_metrics(
     return (test_acc, test_precision, test_recall)
 
 
-def comparison(values, labels, fileName):
-    plotter(
-        values_arr=values,
-        label_arr=labels,
-        file_name=fileName,
-        y_label="Score",
-        width=0.2,
-    )

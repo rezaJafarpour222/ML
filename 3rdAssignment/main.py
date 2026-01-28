@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from solution import DecisionTree_Scenario, LDA_Scenario, SVM_Scenario
+from solution import DecisionTree_Scenario, LDA_Scenario, SVM_Scenario,Best_Configuration_Comparison
 from util import splitter, z_score_scaler
 
 raw_data = pd.read_csv("3rdAssignment/DataSets/pima-indians-diabetes.csv", header=None)
@@ -16,4 +16,4 @@ weighted_input = np.hstack([np.ones((raw_data.shape[0], 1)), X_Scaled])
 # SVM_Scenario(weighted_input=weighted_input, label=raw_label)
 # LDA_Scenario(weighted_input=weighted_input, label=raw_label)
 # DecisionTree_Scenario(weighted_input=weighted_input, label=raw_label)
-comparison(weighted_input=weighted_input, label=raw_label)
+Best_Configuration_Comparison(weighted_input=weighted_input, label=raw_label)
